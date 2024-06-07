@@ -5,14 +5,14 @@ import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import qs from "query-string";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { useDebounceValue } from "usehooks-ts";
+import { useDebounce } from "usehooks-ts";
 
 type Props = {};
 
 function SearchInput({}: Props) {
   const router = useRouter();
   const [value, setValue] = useState("");
-  const debouncedValue = useDebounceValue(value, 500);
+  const debouncedValue = useDebounce(value, 500);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -23,7 +23,6 @@ function SearchInput({}: Props) {
       {
         url: "/",
         query: {
-          // @ts-ignore
           search: debouncedValue,
         },
       },
@@ -42,6 +41,7 @@ function SearchInput({}: Props) {
         className="w-full max-w-[516px] pl-9"
         placeholder="Search Miro"
         onChange={handleChange}
+        value={value}
       />
     </div>
   );
