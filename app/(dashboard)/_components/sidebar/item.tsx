@@ -24,7 +24,7 @@ function Item({ id, name, imageUrl }: Props) {
   };
 
   return (
-    <div className="aspect-square relative">
+    <div className="aspect-square relative" onClick={onClick}>
       <Hint label={name} side="right" align="start" sideOffset={18}>
         <Image
           fill
