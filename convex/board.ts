@@ -2,16 +2,16 @@ import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 
 const images = [
-  "/placeholder/svg1",
-  "/placeholder/svg2",
-  "/placeholder/svg3",
-  "/placeholder/svg4",
-  "/placeholder/svg5",
-  "/placeholder/svg6",
-  "/placeholder/svg7",
-  "/placeholder/svg8",
-  "/placeholder/svg9",
-  "/placeholder/svg10",
+  "/placeholder/svg1.svg",
+  "/placeholder/svg2.svg",
+  "/placeholder/svg3.svg",
+  "/placeholder/svg4.svg",
+  "/placeholder/svg5.svg",
+  "/placeholder/svg6.svg",
+  "/placeholder/svg7.svg",
+  "/placeholder/svg8.svg",
+  "/placeholder/svg9.svg",
+  "/placeholder/svg10.svg",
 ];
 
 export const create = mutation({
