@@ -44,8 +44,22 @@ export const remove = mutation({
   args: { id: v.id("boards") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
+
     if (!identity) {
       throw new Error("Unauthorized");
+    }
+
+    const userId = identity.subject;
+
+    const exitingFavorite = await ctx.db
+      .query("userFavorites")
+      .withIndex("by_user_board", (q) =>
+        q.eq("userId", userId).eq("boardId", args.id)
+      )
+      .unique();
+
+    if (exitingFavorite) {
+      await ctx.db.delete(exitingFavorite._id);
     }
 
     await ctx.db.delete(args.id);
@@ -90,8 +104,8 @@ export const favorite = mutation({
     const userId = identity.subject;
     const exitingFavorite = await ctx.db
       .query("userFavorites")
-      .withIndex("by_user_board_org", (q) =>
-        q.eq("userId", userId).eq("boardId", board._id).eq("orgId", args.orgId)
+      .withIndex("by_user_board", (q) =>
+        q.eq("userId", userId).eq("boardId", board._id)
       )
       .unique();
     if (exitingFavorite) {
@@ -118,9 +132,8 @@ export const unfavorite = mutation({
     const userId = identity.subject;
     const exitingFavorite = await ctx.db
       .query("userFavorites")
-      .withIndex(
-        "by_user_board",
-        (q) => q.eq("userId", userId).eq("boardId", board._id) //TODO:
+      .withIndex("by_user_board", (q) =>
+        q.eq("userId", userId).eq("boardId", board._id)
       )
       .unique();
     if (!exitingFavorite) {
