@@ -5,11 +5,13 @@ import { api } from "@/convex/_generated/api";
 import { useApiMutation } from "@/hooks/use-api-mutations";
 import { useOrganization } from "@clerk/nextjs";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 type Props = {};
 
 function EmptyBoard({}: Props) {
+  const router = useRouter();
   const { organization } = useOrganization();
   const { mutate, pending } = useApiMutation(api.board.create);
   /*  const create = useMutation(api.board.create); */
@@ -23,6 +25,7 @@ function EmptyBoard({}: Props) {
     })
       .then((id) => {
         toast.success("Board Created");
+        router.push(`/board/${id}`);
       })
       .catch(() => toast.error("Something Went Wrong"));
   };
