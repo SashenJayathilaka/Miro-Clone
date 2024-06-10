@@ -33,6 +33,8 @@ type Props = {
 
 function Canvas({ boardId }: Props) {
   const layerIds = useStorage((root) => root.layerIds);
+  //console.log("🚀 ~ Canvas ~ layerIds:", layerIds);
+
   const [canvasState, setCanvasState] = useState<CanvasState>({
     mode: CanvasMode.None,
   });
@@ -101,21 +103,26 @@ function Canvas({ boardId }: Props) {
     []
   );
 
-  const onPointerleave = useMutation(({ setMyPresence }) => {
+  const onPointerLeave = useMutation(({ setMyPresence }) => {
     setMyPresence({ cursor: null });
   }, []);
 
-  const onPointerUp = useMutation(({}, e) => {
-    const point = pointerEventToCanvasValuePoint(e, camera);
+  const onPointerUp = useMutation(
+    ({}, e) => {
+      const point = pointerEventToCanvasValuePoint(e, camera);
 
-    if (canvasState.mode === CanvasMode.Inserting) {
-      insertLayer(canvasState.layerType, point);
-    } else {
-      setCanvasState({
-        mode: CanvasMode.None,
-      });
-    }
-  }, []);
+      if (canvasState.mode === CanvasMode.Inserting) {
+        insertLayer(canvasState.layerType, point);
+      } else {
+        setCanvasState({
+          mode: CanvasMode.None,
+        });
+      }
+
+      history.resume();
+    },
+    [camera, canvasState, history, insertLayer]
+  );
 
   return (
     <main className="h-full w-full relative bg-neutral-100 touch-none">
@@ -126,17 +133,21 @@ function Canvas({ boardId }: Props) {
         setCanvasState={setCanvasState}
         canRedo={canRedo}
         canUndo={canUndo}
-        undo={history.canUndo}
-        redo={history.canRedo}
+        undo={history.undo}
+        redo={history.redo}
       />
       <svg
         className="h-[100vw] w-[100vw]"
         onWheel={onWheel}
         onPointerMove={onpointerMove}
-        onPointerLeave={onPointerleave}
+        onPointerLeave={onPointerLeave}
         onPointerUp={onPointerUp}
       >
-        <g style={{ transform: `translate(${camera.x}px), ${camera.y}px` }}>
+        <g
+          style={{
+            transform: `translate(${camera.x}px, ${camera.y}px)`,
+          }}
+        >
           {layerIds.map((layerId) => (
             <LayerPreview
               key={layerId}
