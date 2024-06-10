@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Info from "./info";
 import Participants from "./participants";
 import Toolbar from "./toolbar";
@@ -12,7 +11,7 @@ type Props = {
 function Canvas({ boardId }: Props) {
   return (
     <main className="h-full w-full relative bg-neutral-100 touch-none">
-      <Info />
+      <Info boardId={boardId} />
       <Participants />
       <Toolbar />
     </main>
@@ -20,5 +19,3 @@ function Canvas({ boardId }: Props) {
 }
 
 export default Canvas;
-
-/* 05.00 */
