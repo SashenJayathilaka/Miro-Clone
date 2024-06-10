@@ -2,6 +2,7 @@
 
 import { useOthers, useSelf } from "@/liveblocks.config";
 import { UserAvatar } from "./user-avatar";
+import { connectionIdToColor } from "@/lib/utils";
 
 type Props = {};
 
@@ -18,6 +19,7 @@ function Participants({}: Props) {
         {users.slice(0, MAX_SHOWN_USERS).map(({ connectionId, info }) => {
           return (
             <UserAvatar
+              borderColor={connectionIdToColor(connectionId)}
               key={connectionId}
               src={info?.picture}
               name={info?.name}
@@ -28,9 +30,17 @@ function Participants({}: Props) {
 
         {currentUser && (
           <UserAvatar
+            borderColor={connectionIdToColor(currentUser.connectionId)}
             src={currentUser.info?.picture}
             name={`${currentUser.info?.name} (you)`}
             fallback={currentUser.info?.name?.[0]}
+          />
+        )}
+
+        {hasMoreUsers && (
+          <UserAvatar
+            name={`${users.length - MAX_SHOWN_USERS} more`}
+            fallback={`+${users.length - MAX_SHOWN_USERS}`}
           />
         )}
       </div>
