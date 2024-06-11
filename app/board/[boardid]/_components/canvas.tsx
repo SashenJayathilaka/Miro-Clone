@@ -19,6 +19,8 @@ import {
   Color,
   LayerType,
   Point,
+  Side,
+  XYWM,
 } from "@/types/canvas";
 import { LiveObject } from "@liveblocks/client";
 import { nanoid } from "nanoId";
@@ -90,6 +92,24 @@ function Canvas({ boardId }: Props) {
     [lastUseColor]
   );
 
+  const reSizeSelectLayer = useMutation(({ storage, self }, point: Point) => {
+    if (canvasState.mode !== CanvasMode.Resizing) {
+      return;
+    }
+  }, []);
+
+  const onReSizeHandlePointDown = useCallback(
+    (corner: Side, initialBounds: XYWM) => {
+      history.pause();
+      setCanvasState({
+        mode: CanvasMode.Resizing,
+        initialBounds,
+        corner,
+      });
+    },
+    [history]
+  );
+
   const onWheel = useCallback((e: React.WheelEvent) => {
     setCamera((camera) => ({
       x: camera.x - e.deltaX,
@@ -103,9 +123,13 @@ function Canvas({ boardId }: Props) {
 
       const current = pointerEventToCanvasValuePoint(e, camera);
 
+      if (canvasState.mode === CanvasMode.Resizing) {
+        console.log("Hello");
+      }
+
       setMyPresence({ cursor: current });
     },
-    []
+    [canvasState]
   );
 
   const onPointerLeave = useMutation(({ setMyPresence }) => {
@@ -200,7 +224,7 @@ function Canvas({ boardId }: Props) {
               selectionColor={layerIdsToColorSelections[layerId]}
             />
           ))}
-          <SelectionBox onReSizeHandlePointDown={() => {}} />
+          <SelectionBox onReSizeHandlePointDown={onReSizeHandlePointDown} />
           <CursorPresence />
         </g>
       </svg>
@@ -209,3 +233,5 @@ function Canvas({ boardId }: Props) {
 }
 
 export default Canvas;
+
+/* 08.10 */
