@@ -101,7 +101,7 @@ export type CanvasState =
     }
   | {
       mode: CanvasMode.Translating;
-      current?: Point;
+      current: Point;
     }
   | {
       mode: CanvasMode.Inserting;

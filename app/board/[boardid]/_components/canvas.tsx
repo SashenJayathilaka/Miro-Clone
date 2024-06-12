@@ -3,6 +3,7 @@
 import {
   connectionIdToColor,
   pointerEventToCanvasValuePoint,
+  resizeBounds,
 } from "@/lib/utils";
 import {
   useCanRedo,
@@ -30,6 +31,7 @@ import Info from "./info";
 import { LayerPreview } from "./layer-preview";
 import Participants from "./participants";
 import { SelectionBox } from "./selection-box";
+import { SelectionTools } from "./selection-tools";
 import Toolbar from "./toolbar";
 
 const MAX_LAYERS = 100;
@@ -92,11 +94,68 @@ function Canvas({ boardId }: Props) {
     [lastUseColor]
   );
 
-  const reSizeSelectLayer = useMutation(({ storage, self }, point: Point) => {
-    if (canvasState.mode !== CanvasMode.Resizing) {
-      return;
+  const translateSelectedLayer = useMutation(
+    ({ storage, self }, point: Point) => {
+      if (canvasState.mode !== CanvasMode.Translating) {
+        return;
+      }
+
+      const offset = {
+        x: point.x - canvasState.current.x,
+        y: point.y - canvasState.current.y,
+      };
+
+      const liveLayers = storage.get("layers");
+
+      for (const id of self.presence.selection) {
+        const layer = liveLayers.get(id);
+
+        if (layer) {
+          layer.update({
+            x: layer.get("x") + offset.x,
+            y: layer.get("y") + offset.y,
+          });
+        }
+      }
+
+      setCanvasState({ mode: CanvasMode.Translating, current: point });
+    },
+    [canvasState]
+  );
+
+  const unSelectLayers = useMutation(({ self, setMyPresence }) => {
+    if (self.presence.selection.length > 0) {
+      setMyPresence({ selection: [] }, { addToHistory: true });
     }
   }, []);
+
+  const startMultiSection = useCallback((current: Point, origin: Point) => {
+    if (Math.abs(current.x - origin.x) + Math.abs(current.y - origin.y) > 5) {
+      setCanvasState({ mode: CanvasMode.SelectionNet, origin, current });
+    }
+  }, []);
+
+  const reSizeSelectLayer = useMutation(
+    ({ storage, self }, point: Point) => {
+      if (canvasState.mode !== CanvasMode.Resizing) {
+        return;
+      }
+
+      const bonds = resizeBounds(
+        canvasState.initialBounds,
+        canvasState.corner,
+        point
+      );
+
+      const liveLayers = storage.get("layers");
+      const layer = liveLayers.get(self.presence.selection[0]);
+
+      if (layer) {
+        layer.update(bonds);
+      }
+    },
+    [canvasState]
+  );
 
   const onReSizeHandlePointDown = useCallback(
     (corner: Side, initialBounds: XYWM) => {
@@ -122,25 +181,49 @@ function Canvas({ boardId }: Props) {
       e.preventDefault();
 
       const current = pointerEventToCanvasValuePoint(e, camera);
+      if (canvasState.mode === CanvasMode.Pressing) {
+        startMultiSection(current, canvasState.origin);
+      }
 
-      if (canvasState.mode === CanvasMode.Resizing) {
-        console.log("Hello");
+      if (canvasState.mode === CanvasMode.Translating) {
+        translateSelectedLayer(current);
+      } else if (canvasState.mode === CanvasMode.Resizing) {
+        reSizeSelectLayer(current);
       }
 
       setMyPresence({ cursor: current });
     },
-    [canvasState]
+    [canvasState, reSizeSelectLayer, camera, translateSelectedLayer]
   );
 
   const onPointerLeave = useMutation(({ setMyPresence }) => {
     setMyPresence({ cursor: null });
   }, []);
 
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      const point = pointerEventToCanvasValuePoint(e, camera);
+
+      if (canvasState.mode === CanvasMode.Inserting) {
+        return;
+      }
+
+      setCanvasState({ origin: point, mode: CanvasMode.Pressing });
+    },
+    [camera, canvasState.mode, setCanvasState]
+  );
+
   const onPointerUp = useMutation(
     ({}, e) => {
       const point = pointerEventToCanvasValuePoint(e, camera);
 
-      if (canvasState.mode === CanvasMode.Inserting) {
+      if (
+        canvasState.mode === CanvasMode.None ||
+        canvasState.mode === CanvasMode.Pressing
+      ) {
+        unSelectLayers();
+        setCanvasState({ mode: CanvasMode.None });
+      } else if (canvasState.mode === CanvasMode.Inserting) {
         insertLayer(canvasState.layerType, point);
       } else {
         setCanvasState({
@@ -150,7 +233,7 @@ function Canvas({ boardId }: Props) {
 
       history.resume();
     },
-    [camera, canvasState, history, insertLayer]
+    [camera, canvasState, history, insertLayer, unSelectLayers]
   );
 
   const selections = useOthersMapped((other) => other.presence.selection);
@@ -204,12 +287,14 @@ function Canvas({ boardId }: Props) {
         undo={history.undo}
         redo={history.redo}
       />
+      <SelectionTools camera={camera} setLastUsedColor={setLastUseColor} />
       <svg
         className="h-[100vw] w-[100vw]"
         onWheel={onWheel}
         onPointerMove={onpointerMove}
         onPointerLeave={onPointerLeave}
         onPointerUp={onPointerUp}
+        onPointerDown={onPointerDown}
       >
         <g
           style={{
@@ -234,4 +319,4 @@ function Canvas({ boardId }: Props) {
 
 export default Canvas;
 
-/* 08.10 */
+// 09.38
