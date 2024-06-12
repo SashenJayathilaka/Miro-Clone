@@ -2,6 +2,8 @@ import { useStorage } from "@/liveblocks.config";
 import { LayerType } from "@/types/canvas";
 import React, { memo } from "react";
 import Rectangle from "./rectangle";
+import Ellipse from "./ellipse";
+import Text from "./text";
 
 type Props = {
   id: string;
@@ -18,6 +20,24 @@ export const LayerPreview = memo(
     }
 
     switch (layer.type) {
+      case LayerType.Text:
+        return (
+          <Text
+            id={id}
+            layer={layer}
+            onPointerDown={onLayerPointDown}
+            selectionColor={selectionColor}
+          />
+        );
+      case LayerType.Ellipse:
+        return (
+          <Ellipse
+            id={id}
+            layer={layer}
+            onPointerDown={onLayerPointDown}
+            selectionColor={selectionColor}
+          />
+        );
       case LayerType.Rectangle:
         return (
           <Rectangle

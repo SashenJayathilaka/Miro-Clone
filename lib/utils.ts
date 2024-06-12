@@ -90,7 +90,7 @@ export function findIntersectingLayerWithRectangle(
     ) {
       ids.push(layerId);
     }
-
-    return ids;
   }
+
+  return ids;
 }
