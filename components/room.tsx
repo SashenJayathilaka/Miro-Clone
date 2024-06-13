@@ -19,6 +19,8 @@ function Room({ children, roomId }: Props) {
       initialPresence={{
         cursor: null,
         selection: [],
+        penColor: null,
+        pencilDraft: null,
       }}
       initialStorage={{
         layers: new LiveMap<string, LiveObject<Layer>>(),

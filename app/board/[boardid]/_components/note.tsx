@@ -1,6 +1,6 @@
-import { cn, colorToCss } from "@/lib/utils";
+import { cn, colorToCss, getContrastingTextColor } from "@/lib/utils";
 import { useMutation } from "@/liveblocks.config";
-import { TextLayer } from "@/types/canvas";
+import { NoteLayer } from "@/types/canvas";
 import { Kalam } from "next/font/google";
 import React from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
@@ -9,7 +9,7 @@ const font = Kalam({ subsets: ["latin"], weight: ["400"] });
 
 const calculateFontSize = (width: number, height: number) => {
   const maxFontSize = 96;
-  const scaleFactor = 0.5;
+  const scaleFactor = 0.15;
   const fontSizeBasedOnHeight = height * scaleFactor;
   const fontSizeBasedOnWidth = width * scaleFactor;
 
@@ -18,12 +18,12 @@ const calculateFontSize = (width: number, height: number) => {
 
 type Props = {
   id: string;
-  layer: TextLayer;
+  layer: NoteLayer;
   onPointerDown: (e: React.PointerEvent, id: string) => void;
   selectionColor?: string;
 };
 
-function Text({ id, layer, onPointerDown, selectionColor }: Props) {
+function Note({ id, layer, onPointerDown, selectionColor }: Props) {
   const { x, y, width, height, fill, value } = layer;
 
   const updateValue = useMutation(({ storage }, newValue: string) => {
@@ -44,22 +44,24 @@ function Text({ id, layer, onPointerDown, selectionColor }: Props) {
       onPointerDown={(e) => onPointerDown(e, id)}
       style={{
         outline: selectionColor ? `1px solid ${selectionColor}` : "none",
+        backgroundColor: fill ? colorToCss(fill) : "#000",
       }}
+      className="shadow-md drop-shadow-xl"
     >
       <ContentEditable
         html={value || "Text"}
         onChange={handleContentChange}
         className={cn(
-          "h-full w-full flex items-center justify-center text-center drop-shadow-md outline-none",
+          "h-full w-full flex items-center justify-center text-center outline-none",
           font.className
         )}
         style={{
           fontSize: calculateFontSize(width, height),
-          color: fill ? colorToCss(fill) : "#000",
+          color: fill ? getContrastingTextColor(fill) : "#000",
         }}
       />
     </foreignObject>
   );
 }
 
-export default Text;
+export default Note;
