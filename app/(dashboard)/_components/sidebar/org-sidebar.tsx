@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { OrganizationSwitcher } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import { LayoutDashboard, Star } from "lucide-react";
 import { Poppins } from "next/font/google";
 import Image from "next/image";
@@ -21,7 +22,16 @@ function OrgSidebar({}: Props) {
   const favorites = searchParams.get("favorites");
 
   return (
-    <div className="hidden lg:flex flex-col space-y-6 w-[206px] pt-5 pl-5">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.8,
+        delay: 0.5,
+        ease: [0, 0.71, 0.2, 1.01],
+      }}
+      className="hidden lg:flex flex-col space-y-6 w-[206px] pt-5 pl-5"
+    >
       <Link href="/">
         <div className="flex items-center gap-x-2">
           <Image src="/logo.jpeg" alt="logo" height={60} width={60} />
@@ -80,7 +90,7 @@ function OrgSidebar({}: Props) {
           </Link>
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

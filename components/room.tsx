@@ -5,6 +5,8 @@ import { Layer } from "@/types/canvas";
 import { LiveList, LiveMap, LiveObject } from "@liveblocks/client";
 import { ClientSideSuspense } from "@liveblocks/react";
 import { ReactNode } from "react";
+import { RotatingTriangles } from "react-loader-spinner";
+import Motion from "./motion";
 
 type Props = {
   children: ReactNode;
@@ -27,7 +29,22 @@ function Room({ children, roomId }: Props) {
         layerIds: new LiveList(),
       }}
     >
-      <ClientSideSuspense fallback={<div>Loading...</div>}>
+      <ClientSideSuspense
+        fallback={
+          <Motion style="h-full w-full flex justify-center items-center">
+            <RotatingTriangles
+              visible={true}
+              height="80"
+              width="80"
+              //@ts-ignore
+              color="#4fa94d"
+              ariaLabel="rotating-triangles-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+          </Motion>
+        }
+      >
         {() => children}
       </ClientSideSuspense>
     </RoomProvider>
