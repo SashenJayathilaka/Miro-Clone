@@ -2,6 +2,7 @@
 
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
+import { motion } from "framer-motion";
 import { BoardCard } from "./board-card";
 import NewBoardButton from "./board-card/new-board-button";
 import EmptyBoard from "./empty-board";
@@ -53,7 +54,16 @@ function BoardList({ orgId, query }: Props) {
       <h2 className="text-3xl">
         {query.favorites ? "Favorite Boards" : "Team Boards"}
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 mt-8 pb-10">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.8,
+          delay: 0.5,
+          ease: [0, 0.71, 0.2, 1.01],
+        }}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 mt-8 pb-10"
+      >
         <NewBoardButton orgId={orgId} />
         {data.map((board) => (
           <BoardCard
@@ -68,7 +78,7 @@ function BoardList({ orgId, query }: Props) {
             isFavorite={board.isFavorite}
           />
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

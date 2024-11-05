@@ -1,3 +1,4 @@
+import Motion from "@/components/motion";
 import SideBar from "./_components/sidebar";
 import Navbar from "./_components/sidebar/navbar";
 import OrgSidebar from "./_components/sidebar/org-sidebar";
@@ -13,10 +14,10 @@ function DashBoardLayout({ children }: Props) {
       <div className="pl-[60px] h-full">
         <div className="flex gap-x-3 h-full">
           <OrgSidebar />
-          <div className="h-full flex-1">
+          <Motion style="h-full flex-1">
             <Navbar />
             {children}
-          </div>
+          </Motion>
         </div>
       </div>
     </main>

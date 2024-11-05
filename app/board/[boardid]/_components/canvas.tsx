@@ -1,5 +1,6 @@
 "use client";
 
+import { UseDeleteLayers } from "@/hooks/use-delete-layers";
 import { useDisableScrollBounce } from "@/hooks/use-disable-scroll-bounce";
 import {
   colorToCss,
@@ -29,6 +30,7 @@ import {
   XYWM,
 } from "@/types/canvas";
 import { LiveObject } from "@liveblocks/client";
+import { motion } from "framer-motion";
 import { nanoid } from "nanoId";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CursorPresence } from "./cursor-presence";
@@ -39,7 +41,6 @@ import Path from "./path";
 import { SelectionBox } from "./selection-box";
 import { SelectionTools } from "./selection-tools";
 import Toolbar from "./toolbar";
-import { UseDeleteLayers } from "@/hooks/use-delete-layers";
 
 const MAX_LAYERS = 100;
 
@@ -417,60 +418,68 @@ function Canvas({ boardId }: Props) {
 
   return (
     <main className="h-full w-full relative bg-neutral-100 touch-none">
-      <Info boardId={boardId} />
-      <Participants />
-      <Toolbar
-        canvasState={canvasState}
-        setCanvasState={setCanvasState}
-        canRedo={canRedo}
-        canUndo={canUndo}
-        undo={history.undo}
-        redo={history.redo}
-      />
-      <SelectionTools camera={camera} setLastUsedColor={setLastUseColor} />
-      <svg
-        className="h-[100vw] w-[100vw]"
-        onWheel={onWheel}
-        onPointerMove={onpointerMove}
-        onPointerLeave={onPointerLeave}
-        onPointerUp={onPointerUp}
-        onPointerDown={onPointerDown}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
       >
-        <g
-          style={{
-            transform: `translate(${camera.x}px, ${camera.y}px)`,
-          }}
+        <Info boardId={boardId} />
+        <Participants />
+        <Toolbar
+          canvasState={canvasState}
+          setCanvasState={setCanvasState}
+          canRedo={canRedo}
+          canUndo={canUndo}
+          undo={history.undo}
+          redo={history.redo}
+        />
+        <SelectionTools camera={camera} setLastUsedColor={setLastUseColor} />
+        <svg
+          className="h-[100vw] w-[100vw]"
+          onWheel={onWheel}
+          onPointerMove={onpointerMove}
+          onPointerLeave={onPointerLeave}
+          onPointerUp={onPointerUp}
+          onPointerDown={onPointerDown}
         >
-          {layerIds.map((layerId) => (
-            <LayerPreview
-              key={layerId}
-              id={layerId}
-              onLayerPointDown={onLayerPointerDown}
-              selectionColor={layerIdsToColorSelections[layerId]}
-            />
-          ))}
-          <SelectionBox onReSizeHandlePointDown={onReSizeHandlePointDown} />
-          {canvasState.mode === CanvasMode.SelectionNet &&
-            canvasState.current != null && (
-              <rect
-                className="fill-blue-500/5 stroke-blue-500 stroke-1"
-                x={Math.min(canvasState.origin.x, canvasState.current?.x)}
-                y={Math.min(canvasState.origin.y, canvasState.current?.y)}
-                width={Math.abs(canvasState.origin.x - canvasState.current.x)}
-                height={Math.abs(canvasState.origin.y - canvasState.current.y)}
+          <g
+            style={{
+              transform: `translate(${camera.x}px, ${camera.y}px)`,
+            }}
+          >
+            {layerIds.map((layerId) => (
+              <LayerPreview
+                key={layerId}
+                id={layerId}
+                onLayerPointDown={onLayerPointerDown}
+                selectionColor={layerIdsToColorSelections[layerId]}
+              />
+            ))}
+            <SelectionBox onReSizeHandlePointDown={onReSizeHandlePointDown} />
+            {canvasState.mode === CanvasMode.SelectionNet &&
+              canvasState.current != null && (
+                <rect
+                  className="fill-blue-500/5 stroke-blue-500 stroke-1"
+                  x={Math.min(canvasState.origin.x, canvasState.current?.x)}
+                  y={Math.min(canvasState.origin.y, canvasState.current?.y)}
+                  width={Math.abs(canvasState.origin.x - canvasState.current.x)}
+                  height={Math.abs(
+                    canvasState.origin.y - canvasState.current.y
+                  )}
+                />
+              )}
+            <CursorPresence />
+            {pencilDraft !== null && pencilDraft.length > 0 && (
+              <Path
+                x={0}
+                y={0}
+                points={pencilDraft}
+                fill={colorToCss(lastUseColor)}
               />
             )}
-          <CursorPresence />
-          {pencilDraft !== null && pencilDraft.length > 0 && (
-            <Path
-              x={0}
-              y={0}
-              points={pencilDraft}
-              fill={colorToCss(lastUseColor)}
-            />
-          )}
-        </g>
-      </svg>
+          </g>
+        </svg>
+      </motion.div>
     </main>
   );
 }
