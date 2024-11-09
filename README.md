@@ -9,7 +9,7 @@ Real-Time Miro Clone With Nextjs, React, Tailwind
   </p>
   
 <!-- Badges -->
-<a href="https://airbnb-sclone.vercel.app" target="_blank">![](https://img.shields.io/website-up-down-green-red/http/monip.org.svg)</a>
+<a href="[https://airbnb-sclone.vercel.app](https://miro-clone-jade.vercel.app/)" target="_blank">![](https://img.shields.io/website-up-down-green-red/http/monip.org.svg)</a>
 ![](https://img.shields.io/badge/Maintained-Yes-indigo)
 ![](https://img.shields.io/github/forks/SashenJayathilaka/Miro-Clone.svg)
 ![](https://img.shields.io/github/stars/SashenJayathilaka/Miro-Clone.svg)
@@ -17,7 +17,7 @@ Real-Time Miro Clone With Nextjs, React, Tailwind
 ![](https://img.shields.io/github/last-commit/SashenJayathilaka/Miro-Clone)
 
 <h4>
-    <a href="https://abproject-sclone.vercel.app">View Demo</a>
+    <a href="https://miro-clone-jade.vercel.app">View Demo</a>
   <span> · </span>
     <a href="https://github.com/SashenJayathilaka/Miro-Clone/blob/master/README.md">Documentation</a>
   <span> · </span>
@@ -52,21 +52,17 @@ Real-Time Miro Clone With Nextjs, React, Tailwind
 
 ### :camera: Screenshots
 
-- Reservation functionality & Description and Price, Listing creation, Listing card component
-
 <div align="center">
-<a href="https://airbnb-sclone.vercel.app"><img  src='./demo/ezgif-4-27f1be5f56.gif' alt='image'/></a>
+<a href="https://miro-clone-jade.vercel.app"><img  src='https://github.com/user-attachments/assets/cf8878b3-2178-494c-9c07-959f1639a4d2' alt='image'/></a>
 </div>
 
 <br />
 
-- Searching functionality Favorite functionality, Individual Listing View, Listing reservation component
-
 <div align="center">
-<a href="https://airbnb-sclone.vercel.app"><img  src='./demo/ezgif-4-8ac9db77ff.gif' alt='image'/></a>
+<a href="https://miro-clone-jade.vercel.app"><img  src='https://github.com/user-attachments/assets/8fdb667e-89ce-4f07-9aae-54ee4248b14b' alt='image'/></a>
 </div>
 
-## <a href="https://airbnb-sclone.vercel.app" target="_blank">LIVE DEMO 💥</a>
+## <a href="https://miro-clone-jade.vercel.app" target="_blank">LIVE DEMO 💥</a>
 
 ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
 ![forthebadge](https://forthebadge.com/images/badges/for-you.svg)
