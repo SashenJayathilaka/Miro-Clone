@@ -31,7 +31,7 @@ import {
 } from "@/types/canvas";
 import { LiveObject } from "@liveblocks/client";
 import { motion } from "framer-motion";
-import { nanoid } from "nanoId";
+import { nanoid } from "nanoid";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CursorPresence } from "./cursor-presence";
 import Info from "./info";
