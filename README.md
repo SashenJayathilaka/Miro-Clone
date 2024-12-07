@@ -5,7 +5,7 @@
 # Miro Clone With Nextjs 
   
   <p>
-Real-Time Miro Clone With Nextjs, React, Tailwind
+🛠️ Build a Custom Whiteboard 🧰 Tools for Text, Shapes, Sticky Notes & Pencil 🪄 Layer Management 🎨 Color Palette Options ↩️ Undo & Redo Actions ⌨️ Keyboard Shortcuts 🤝 Collaborate in Real Time 💾 Live Database Integration 🔐 Authentication, Organizations & Invites ⭐️ Favorite Items for Quick Access 🌐 Powered by Next.js 14
   </p>
   
 <!-- Badges -->
